@@ -129,6 +129,7 @@
         path: "~/.kube"
         state: directory
     - name: Setting up kubeconfig
+      become: yes
       copy: 
         src: /etc/kubernetes/admin.conf
         dest: "~/.kube/config"
