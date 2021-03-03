@@ -132,7 +132,7 @@
       become: yes
       copy: 
         src: /etc/kubernetes/admin.conf
-        dest: "~/.kube/config"
+        dest: "/home/ubuntu/.kube/config"
         owner: ubuntu
         group: ubuntu
         remote_src: yes
