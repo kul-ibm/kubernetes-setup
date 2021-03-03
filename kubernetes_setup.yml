@@ -156,27 +156,27 @@
       shell: kubeadm token create --print-join-command | grep -i kubeadm > /tmp/join-command.sh
       when: inventory_hostname in gropus['master']
     - name: Fetching Join Command Script to Ansible Master
-      when: inventory_hostname in gropus['master']
-      Fetch:
+      when: inventory_hostname in groups['master']
+      fetch:
         src: /tmp/join-command.sh
         dest: join-command.sh
         mode: 755
         flat: yes
     - name: Copy Join Command Script to Node Machine
-      when: inventory_hostname in gropus['nodes']
+      when: inventory_hostname in groups['nodes']
       copy: 
         src: join-command.sh
         dest: /tmp/join-command.sh
     - name: Run Join Command Script
-      when: inventory_hostname in gropus['nodes']
+      when: inventory_hostname in groups['nodes']
       become: yes
       shell: kubeadm reset -f && /tmp/join-command.sh
       register: output
     - name: Print Join Command output
-      when: inventory_hostname in gropus['nodes']
+      when: inventory_hostname in groups['nodes']
       debug: var=output.stdout_lines
     - name: Checking the Join Status
-      when: inventory_hostname in gropus['master']
+      when: inventory_hostname in groups['master']
       shell: kubectl get nodes
       register: output  
     - name: Print Join Status output
