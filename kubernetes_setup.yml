@@ -100,11 +100,16 @@
           - kubelet
           - kubeadm
           - kubectl
-    - name: Putting kubernetes package selection on hold
+    - name: Putting kubelet on hold
       dpkg_selections: 
-        name: 
-          - kubelet
-          - kubeadm
-          - kubectl
+        name: kubelet
+        selection: hold
+    - name: Putting kubeadm on hold
+      dpkg_selections: 
+        name: kubeadm
+        selection: hold
+    - name: Putting kubectl on hold
+      dpkg_selections: 
+        name: kubectl
         selection: hold
         
