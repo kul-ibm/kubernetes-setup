@@ -36,8 +36,23 @@
       file: 
         path: /etc/docker
         state: directory
-    - name: COpy daemon.json to Server
+    - name: Copy daemon.json to Server
       copy: 
         src: daemon.json
         dest: /etc/docker/daemon.json
-    - 
+      notify:
+        - restart-docker-service
+    - name: Create /etc/systemd/system/docker.service.d
+      file:
+        path: /etc/systemd/system/docker.service.d
+        state: directory
+    - name: Enable Docker Service
+      service: 
+        name: docker
+        state: started
+        enabled: yes
+  handlers:
+    - name: restart-docker-service
+      service:
+        name: docker
+        state: restarted
