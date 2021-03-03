@@ -63,7 +63,7 @@
         state: restarted
 
 - name: Install Kubernetes Components
-  host: all
+  hosts: all
   become: yes
 
   tasks:
