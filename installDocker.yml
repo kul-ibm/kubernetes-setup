@@ -1,0 +1,43 @@
+---
+- name: Install Docker for Kubernetes
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Installing Dependecies & required packages
+      apt:
+        update_cache: yes
+        state: present
+        name: 
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - gnupg2
+    #- name: Add Docker's official GPG key
+      #shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key --keyring /etc/apt/trusted.gpg.d/docker.gpg add -
+    - name: Add Docker's official GPG key
+      apt_key: 
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
+    - name: Install Docker Packages
+      apt:
+        update_cache: yes
+        state: present
+        name: 
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+    - name: Setting Docker Directory
+      file: 
+        path: /etc/docker
+        state: directory
+    - name: COpy daemon.json to Server
+      copy: 
+        src: daemon.json
+        dest: /etc/docker/daemon.json
+    - 
