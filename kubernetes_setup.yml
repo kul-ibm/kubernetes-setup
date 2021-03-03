@@ -154,7 +154,7 @@
     - name: create Join command
       become: yes
       shell: kubeadm token create --print-join-command | grep -i kubeadm > /tmp/join-command.sh
-      when: inventory_hostname in gropus['master']
+      when: inventory_hostname in groups['master']
     - name: Fetching Join Command Script to Ansible Master
       when: inventory_hostname in groups['master']
       fetch:
