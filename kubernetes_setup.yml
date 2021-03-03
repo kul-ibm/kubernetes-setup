@@ -119,7 +119,7 @@
   tasks:
     - name: Initialise master
       become: yes
-      shell: kubeadm init --apiserver-advertise-address={{ ansible_eth0.ipv4_address }}
+      shell: kubeadm init --apiserver-advertise-address={{ ansible_eth0.ipv4.address }}
       register: output
       ignore_errors: yes
     - name: priniting Initialisation Logs
