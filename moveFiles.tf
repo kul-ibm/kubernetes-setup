@@ -16,7 +16,7 @@ resource "null_resource" "moveFiles" {
      connection {
        type = "ssh"
        user = "ubuntu"
-       host = aws_instance.k8s_master[count.index].public_ip
+       host = aws_instance.k8s_node[count.index].public_ip
        private_key = file("c:/training/kul-labs.pem")
      }
      source = "ansible.cfg"
