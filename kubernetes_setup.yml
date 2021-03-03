@@ -113,3 +113,35 @@
         name: kubectl
         selection: hold
         
+- name: Configure Kubernetes Control Plane on Master Node
+  hosts: master
+  
+  tasks:
+    - name: Initialise master
+      become: yes
+      shell: kubeadm init --apiserver-advertise-address={{ ansible_eth0.ipv4_address }}
+      register: output
+      ignore_errors: yes
+    - name: priniting Initialisation Logs
+      debug: var=output.stdout_lines
+    - name: Setting up .kube folder
+      file: 
+        path: "~/.kube"
+        state: directory
+    - name: Setting up kubeconfig
+      copy: 
+        src: /etc/kubernetes/admin.conf
+        dest: "~/.kube/config"
+        owner: ubuntu
+        group: ubuntu
+        remote_src: yes
+    - name: Checking Setup
+      shell: kubectl get nodes
+      register: output
+    - name: priniting GET NODES output
+      debug: var=output.stdout_lines
+    - name: configuring POD network
+      shell: kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/calico.yaml && sleep 20 && kubectl get nodes
+      register: output
+    - name: Priting logs after POD network deployment
+      debug: var=output.stdout_lines
