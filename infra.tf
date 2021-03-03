@@ -10,6 +10,11 @@ terraform {
   }
 }
 
+variable "server" {
+  description = "Give the number of Cluster to be prepared"
+  type = number
+}
+
 resource "aws_instance" "k8s_master" {
   ami = "ami-0996d3051b72b5b2c"
   instance_type = "t2.medium"
@@ -17,7 +22,7 @@ resource "aws_instance" "k8s_master" {
   tags = {
     "Name" = "k8s_master"
   }
-  count = 26
+  count = var.server
 }
 
 resource "aws_instance" "k8s_node" {
@@ -27,7 +32,7 @@ resource "aws_instance" "k8s_node" {
   tags = {
     "Name" = "k8s_node"
   }
-  count = 26
+  count = var.server
 }
 
 output "public_ips_master" {

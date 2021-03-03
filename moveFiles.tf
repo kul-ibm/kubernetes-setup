@@ -1,5 +1,5 @@
 resource "null_resource" "moveFiles" {
-  count = 26
+  count = var.server
   depends_on = [ aws_instance.k8s_master ]
   provisioner "file" {
     connection {

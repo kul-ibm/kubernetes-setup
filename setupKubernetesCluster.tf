@@ -1,6 +1,6 @@
-resource "null_resource" "chmodPEM" {
+resource "null_resource" "setupKubernetesCluster" {
+  depends_on = [ null_resource.setupHosts ]
   count = var.server
-  depends_on = [ null_resource.moveFiles ]
   provisioner "remote-exec" {
     connection {
         type = "ssh"
@@ -9,7 +9,8 @@ resource "null_resource" "chmodPEM" {
         private_key = file("c:/training/kul-labs.pem")
     }
     inline = [
-        "chmod 400 ~/ansible/kul-labs.pem"
+        "git clone https://github.com/kul-ibm/kubernetes-setup.git",
+        "cd kubernetes-setup && ansible-playbook kubernetes_setup.yml"
     ]
   }
 }

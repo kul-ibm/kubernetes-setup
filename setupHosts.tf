@@ -1,5 +1,6 @@
 resource "null_resource" "setupHosts" {
-  count = 26
+  count = var.server
+  depends_on = [ aws_instance.k8s_master,aws_instance.k8s_node ]
   provisioner "remote-exec" {
     connection {
         type = "ssh"
