@@ -51,6 +51,11 @@
         name: docker
         state: started
         enabled: yes
+    - name: Adding persmission for Local User to run docker
+      file:
+        path: /var/run/docker.sock
+        owner: ubuntu
+        group: ubuntu
   handlers:
     - name: restart-docker-service
       service:
