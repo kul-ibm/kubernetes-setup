@@ -146,3 +146,40 @@
       register: output
     - name: Priting logs after POD network deployment
       debug: var=output.stdout_lines
+
+- name: Attaching node to the Master
+  hosts: all
+
+  tasks:
+    - name: create Join command
+      become: yes
+      shell: kubeadm token create --print-join-command | grep -i kubeadm > /tmp/join-command.sh
+      when: inventory_hostname in gropus['master']
+    - name: Fetching Join Command Script to Ansible Master
+      when: inventory_hostname in gropus['master']
+      Fetch:
+        src: /tmp/join-command.sh
+        dest: join-command.sh
+        mode: 755
+        flat: yes
+    - name: Copy Join Command Script to Node Machine
+      when: inventory_hostname in gropus['nodes']
+      copy: 
+        src: join-command.sh
+        dest: /tmp/join-command.sh
+    - name: Run Join Command Script
+      when: inventory_hostname in gropus['nodes']
+      become: yes
+      shell: kubeadm reset -f && /tmp/join-command.sh
+      register: output
+    - name: Print Join Command output
+      when: inventory_hostname in gropus['nodes']
+      debug: var=output.stdout_lines
+    - name: Checking the Join Status
+      when: inventory_hostname in gropus['master']
+      shell: kubectl get nodes
+      register: output  
+    - name: Print Join Status output
+      when: inventory_hostname in groups['master']
+      debug: var=output.stdout_lines
+    
