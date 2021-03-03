@@ -167,6 +167,7 @@
       copy: 
         src: join-command.sh
         dest: /tmp/join-command.sh
+        mode: 755
     - name: Run Join Command Script
       when: inventory_hostname in groups['nodes']
       become: yes
